@@ -18,17 +18,20 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 
-fun ButtonFinish(currentPage: Int) {
+fun ButtonFinish(currentPage: Int,onClick:()->Unit) {
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.Bottom
+        modifier = Modifier
+            .padding(bottom = 20.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = if (currentPage != 1) Arrangement.SpaceBetween else Arrangement.Center
     ) {
+
+        if(currentPage==1)
 
 
         Button(
-            onClick = {},
+            onClick = onClick,
             modifier = Modifier.padding(10.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Green)
@@ -36,7 +39,7 @@ fun ButtonFinish(currentPage: Int) {
         )
 
         {
-            Text(text = "Continuar")
+            Text(text = "Continuar", color = Color.White)
         }
 
     }
@@ -45,11 +48,3 @@ fun ButtonFinish(currentPage: Int) {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-
-fun ButtonFinishPreview() {
-
-    ButtonFinish(1)
-
-}

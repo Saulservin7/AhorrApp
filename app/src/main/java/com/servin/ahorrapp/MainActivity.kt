@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.servin.ahorrapp.navigation.NavManager
 import com.servin.ahorrapp.ui.theme.AhorrAppTheme
 import com.servin.ahorrapp.view.onboarding.MainOnBoarding
 import com.servin.ahorrapp.viewmodel.OnBoardingViewModel
@@ -24,9 +25,9 @@ class MainActivity : ComponentActivity() {
          val onBoardingViewModel: OnBoardingViewModel by viewModels()
         enableEdgeToEdge()
         setContent {
-            AhorrAppTheme {
-                MainOnBoarding(onBoardingViewModel)
-            }
+
+                NavManager(onBoardingViewModel)
+
         }
     }
 }

@@ -19,42 +19,26 @@ import com.servin.ahorrapp.ui.theme.Green
 
 @Composable
 fun PageIndicator(size: Int, currentPage: Int) {
-
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.padding(top = 50.dp)
+        modifier = Modifier.padding(top = 60.dp)
     ) {
-
-        repeat(size){
-            Indicator(isSelected = it == currentPage)
+        repeat(size) {
+            Indicator(isSelect = it == currentPage)
         }
-
     }
-
-
 }
 
 @Composable
-fun Indicator(isSelected: Boolean) {
-
+fun Indicator(isSelect: Boolean) {
     Box(
         modifier = Modifier
+            .padding(5.dp)
+            .height(10.dp)
+            .width(25.dp) // 10 circulo
             .clip(CircleShape)
-            .width(10.dp)
-            .height(5.dp)
-            .background(
-                if (isSelected) Green else Color.Gray
-            )
-    ) {
-
-
-    }
-
+            .background(if (isSelect) Green else Color.Gray)
+    )
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun IndicatorPreview() {
-   PageIndicator(2, 1)
-}

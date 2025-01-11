@@ -4,13 +4,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.servin.ahorrapp.viewmodel.OnBoardingViewModel
 
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainOnBoarding(onBoardingViewModel: OnBoardingViewModel) {
+fun MainOnBoarding(onBoardingViewModel: OnBoardingViewModel, navController: NavController) {
     val size = onBoardingViewModel.items.size
 
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { size })
@@ -19,7 +20,7 @@ fun MainOnBoarding(onBoardingViewModel: OnBoardingViewModel) {
         item = onBoardingViewModel.items,
         pagerState = pagerState,
         modifier = Modifier.fillMaxSize(),
-        onBoardingViewModel = onBoardingViewModel
+        onBoardingViewModel = onBoardingViewModel, navController
     )
 
 
