@@ -16,9 +16,12 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class OnBoardingViewModel @Inject constructor(private val storeBoarding: StoreBoarding) : ViewModel() {
+class OnBoardingViewModel @Inject constructor(private val storeBoarding: StoreBoarding) :
+    ViewModel() {
 
 
+    private val _isReady = MutableStateFlow(false)
+    val isReady: StateFlow<Boolean> get() = _isReady
 
 
     private val _items = ArrayList<PageData>()
@@ -27,6 +30,7 @@ class OnBoardingViewModel @Inject constructor(private val storeBoarding: StoreBo
 
     init {
         LoadItems()
+
     }
 
 
@@ -49,15 +53,14 @@ class OnBoardingViewModel @Inject constructor(private val storeBoarding: StoreBo
     }
 
     val onboardingState = storeBoarding.getOnboarding
-        .stateIn(viewModelScope, SharingStarted.Lazily, false)
+        .stateIn(viewModelScope, SharingStarted.Lazily, true)
 
 
-    fun setOnBoarding(value:Boolean){
+    fun setOnBoarding(value: Boolean) {
         viewModelScope.launch {
             storeBoarding.setOnboarding(value)
         }
     }
-
 
 
 }

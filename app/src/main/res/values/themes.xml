@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <style name="Theme.AhorrAppSplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.AhorrApp</item>
+
+    </style>
 
     <style name="Theme.AhorrApp" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

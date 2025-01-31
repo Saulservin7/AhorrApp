@@ -69,6 +69,13 @@ dependencies {
     //datastore
     implementation(libs.datastore)
 
+    //SplashScreen
+    implementation(libs.splashscreen)
+
+    //Gson
+    implementation(libs.gson)
+    implementation(libs.gson.extras)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
