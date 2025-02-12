@@ -1,5 +1,6 @@
 package com.servin.ahorrapp.view.games
 
+import android.util.Log
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -34,17 +35,25 @@ import com.servin.ahorrapp.viewmodel.RouletteViewModel
 
 
 @Composable
-fun Roulette(navController: NavController, rouletteViewModel: RouletteViewModel) {
-
-
-    RouletteContent(rouletteViewModel)
-
-
+fun Roulette(
+    navController: NavController,
+    rouletteViewModel: RouletteViewModel,
+    roomId: Int? = null
+) {
+    RouletteContent(rouletteViewModel, roomId)
 }
 
 @Composable
-fun RouletteContent(rouletteViewModel: RouletteViewModel) {
+fun RouletteContent(rouletteViewModel: RouletteViewModel, roomId: Int?) {
+
     val rotationAngle by rouletteViewModel.rotationAngle.collectAsState()
+    LaunchedEffect(roomId) {
+        if (roomId != null) {
+            rouletteViewModel.hideFields() // Oculta campos si hay roomId
+        } else {
+            rouletteViewModel.showFields() // Muestra campos si es una nueva sala
+        }
+    }
 
     // Animación de rotación suave
     val animatedRotation by animateFloatAsState(
@@ -59,59 +68,74 @@ fun RouletteContent(rouletteViewModel: RouletteViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            "Establece un rango para obtener números de la ruleta ",
-            modifier = Modifier
-                .padding(30.dp)
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally)
-        )
+        if (roomId != null) {
 
-        if (rouletteViewModel.showFieldsState.value) {
+            Text(
+                "ID de la sala: $roomId",
+                modifier = Modifier.padding(10.dp)
+            )
 
-            Row {
-                OutlinedTextField(
 
-                    value = rouletteViewModel.initvalue.value,
-                    onValueChange = { rouletteViewModel.setInitValue(it) },
+
+
+        } else {
+
+
+
+            if (rouletteViewModel.showFieldsState.value) {
+                Text(
+                    "Establece un rango para obtener números de la ruleta ",
                     modifier = Modifier
-                        .padding(10.dp)
-                        .height(50.dp)
-                        .width(80.dp),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        .padding(30.dp)
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally)
                 )
 
-                Text("a", modifier = Modifier.padding(top = 20.dp))
+                Row {
+                    OutlinedTextField(
 
-                OutlinedTextField(
-                    value = rouletteViewModel.finalvalue.value,
-                    onValueChange = { rouletteViewModel.setFinalValue(it) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .height(50.dp)
-                        .width(80.dp)
-                )
+                        value = rouletteViewModel.initvalue.value,
+                        onValueChange = { rouletteViewModel.setInitValue(it) },
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .height(50.dp)
+                            .width(80.dp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
 
-                OutlinedButton(
-                    onClick = {
-                        val initValue = rouletteViewModel.initvalue.value.toInt()
-                        val finalValue = rouletteViewModel.finalvalue.value.toInt()
-                        val ruletaGame = Game.Ruleta(rangeStart = initValue, rangeEnd = finalValue)
-                        rouletteViewModel.addRoom(
-                            Rooms(
-                                game = ruletaGame,
-                                userId = 1, // Reemplaza con el ID de usuario correspondiente
-                                totalSaving = 0L
+                    Text("a", modifier = Modifier.padding(top = 20.dp))
+
+                    OutlinedTextField(
+                        value = rouletteViewModel.finalvalue.value,
+                        onValueChange = { rouletteViewModel.setFinalValue(it) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .height(50.dp)
+                            .width(80.dp)
+                    )
+
+                    OutlinedButton(
+                        onClick = {
+                            val initValue = rouletteViewModel.initvalue.value.toInt()
+                            val finalValue = rouletteViewModel.finalvalue.value.toInt()
+                            val ruletaGame =
+                                Game.Ruleta(rangeStart = initValue, rangeEnd = finalValue)
+                            rouletteViewModel.addRoom(
+                                Rooms(
+                                    game = ruletaGame,
+                                    userId = 1, // Reemplaza con el ID de usuario correspondiente
+                                    totalSaving = 0L
+                                )
                             )
-                        )
-                        rouletteViewModel.showFields()
+                            rouletteViewModel.hideFields()
 
 
-                    },
-                    enabled = rouletteViewModel.initvalue.value.isNotEmpty() && rouletteViewModel.finalvalue.value.isNotEmpty()
-                ) {
-                    Text(text = "Guardar")
+                        },
+                        enabled = rouletteViewModel.initvalue.value.isNotEmpty() && rouletteViewModel.finalvalue.value.isNotEmpty()
+                    ) {
+                        Text(text = "Guardar")
+                    }
                 }
             }
 
@@ -125,7 +149,7 @@ fun RouletteContent(rouletteViewModel: RouletteViewModel) {
                 .rotate(animatedRotation)
 
         )
-        if (!rouletteViewModel.showFieldsState.value) {
+        if (!rouletteViewModel.showFieldsState.value || (roomId != null && !rouletteViewModel.showFieldsState.value)) {
             Button(
                 modifier = Modifier.padding(30.dp),
                 colors = ButtonDefaults.buttonColors(Green),

@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.servin.ahorrapp.data.Game
 import com.servin.ahorrapp.data.GameTypeAdapter
+import com.servin.ahorrapp.data.remote.RandomApiService
 import com.servin.ahorrapp.datastore.StoreBoarding
 import com.servin.ahorrapp.room.AhorraAppDatabase
 import com.servin.ahorrapp.room.GoalsDao
@@ -17,6 +18,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 

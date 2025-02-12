@@ -1,7 +1,9 @@
 package com.servin.ahorrapp.view.home
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -22,61 +24,69 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.servin.ahorrapp.data.Game
 import com.servin.ahorrapp.data.GamesDescription
+import com.servin.ahorrapp.navigation.NavigationItem
 import com.servin.ahorrapp.viewmodel.RouletteViewModel
 
 @Composable
 fun Games(navController: NavController, viewModel: RouletteViewModel) {
     Column {
-        GamesContent(viewModel)
+        GamesContent(navController, viewModel)
     }
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
-fun GamesContent(viewModel: RouletteViewModel) {
+fun GamesContent(navController: NavController, viewModel: RouletteViewModel) {
     val rooms = viewModel.roomsList.collectAsState().value
-    val gameImage =
 
-        LazyColumn(
-            modifier = Modifier
-                .padding(top = 50.dp, start = 10.dp, end = 10.dp)
-                .fillMaxHeight(),
-            contentPadding = PaddingValues(bottom = 100.dp)
-        ) {
-            items(rooms.size) { index ->
-                val room = rooms[index]
-                Card(modifier = Modifier
+    LazyColumn(
+        modifier = Modifier
+            .padding(top = 50.dp, start = 10.dp, end = 10.dp)
+            .fillMaxHeight(),
+        contentPadding = PaddingValues(bottom = 100.dp)
+    ) {
+        items(rooms.size) { index ->
+            val room = rooms[index]
+            Card(
+                modifier = Modifier
                     .padding(10.dp)
-                    .fillMaxWidth()) {
-                    Column(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        // ID de la sala
-                        // Acceder a las propiedades de Game
-                        when (val game = room.game) {
-                            is Game.Ruleta -> {
-                                Image(
-                                    painter = painterResource(id = GamesDescription.Ruleta.image),
-                                    contentDescription = "Ruleta",
-                                    modifier = Modifier.size(150.dp)
-                                )
-                                Text(text = "Ruleta")
-                                Text(text = "Rango: ${game.rangeStart} - ${game.rangeEnd}")
-                            }
-
-                            is Game.Trivia -> {
-                                Text(text = " Trivia")
-                                Text(text = "Preguntas: ${game.totalQuestions}")
-                            }
+                    .fillMaxWidth()
+                    .clickable {
+                        val route = "${NavigationItem.Ruleta.route}?id=${room.id}"
+                        Log.d("NAVEGACION", "Ruta generada: $route")
+                        navController.navigate(route)
+                    }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // ID de la sala
+                    // Acceder a las propiedades de Game
+                    when (val game = room.game) {
+                        is Game.Ruleta -> {
+                            Image(
+                                painter = painterResource(id = GamesDescription.Ruleta.image),
+                                contentDescription = "Ruleta",
+                                modifier = Modifier.size(150.dp)
+                            )
+                            Text(text = "Ruleta")
+                            Text(text = "Rango: ${game.rangeStart} - ${game.rangeEnd}")
                         }
 
-                        Text(text = "Dinero Ahorrado: ${room.totalSaving}")
+                        is Game.Trivia -> {
+                            Text(text = " Trivia")
+                            Text(text = "Preguntas: ${game.totalQuestions}")
+                        }
                     }
+
+                    Text(text = "Dinero Ahorrado: ${room.totalSaving}")
                 }
             }
         }
+    }
 
 }
 

@@ -75,6 +75,7 @@ dependencies {
     //Gson
     implementation(libs.gson)
     implementation(libs.gson.extras)
+    implementation(libs.gson.retrofit)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

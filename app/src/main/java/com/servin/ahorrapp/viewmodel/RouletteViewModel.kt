@@ -5,26 +5,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.servin.ahorrapp.data.Game
-import com.servin.ahorrapp.data.GameTypeAdapter
 import com.servin.ahorrapp.model.Rooms
 import com.servin.ahorrapp.repository.AhorraAppRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
 class RouletteViewModel @Inject constructor(
     private val repository: AhorraAppRepository,
-    private val gson:Gson
+    private val gson: Gson,
 
 ) :
     ViewModel() {
+
+
+    private val _randomNumber = MutableStateFlow<Int?>(null)
+    val randomNumber:StateFlow<Int?> = _randomNumber.asStateFlow()
+
+    private val _error = MutableStateFlow<String?>(null)
+    val error:StateFlow<String?> = _error.asStateFlow()
 
     private val _initvalue = mutableStateOf("")
     val initvalue = _initvalue
@@ -39,7 +45,6 @@ class RouletteViewModel @Inject constructor(
     val roomsList = _roomsList.asStateFlow()
 
 
-
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getRoomsByUserId(1).collect { item ->
@@ -49,8 +54,11 @@ class RouletteViewModel @Inject constructor(
     }
 
 
-
     fun showFields() {
+        showFields.value = true
+    }
+
+    fun hideFields() {
         showFields.value = false
     }
 
@@ -77,10 +85,11 @@ class RouletteViewModel @Inject constructor(
     }
 
 
-    fun addRoom(rooms: Rooms) = viewModelScope.launch { repository.insertRoom(rooms)
-        Log.d("RouletteViewModel", "Room inserted: $rooms") }
+    fun addRoom(rooms: Rooms) = viewModelScope.launch {
+        repository.insertRoom(rooms)
+        Log.d("RouletteViewModel", "Room inserted: $rooms")
+    }
 
     suspend fun getRooms() = repository.getRoomsByUserId(1)
-
 
 }

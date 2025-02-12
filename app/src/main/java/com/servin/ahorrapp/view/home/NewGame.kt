@@ -20,7 +20,7 @@ import com.servin.ahorrapp.data.GamesDescription
 
 @Composable
 fun NewGame(navController: NavController) {
-    val items = listOf(GamesDescription.Ruleta)
+    val items = listOf(GamesDescription.Ruleta, GamesDescription.Trivia)
     Column(modifier = Modifier.fillMaxSize().padding(top = 50.dp)) {
 
         items.forEach() { item ->
