@@ -1,17 +1,15 @@
 package com.servin.ahorrapp.data.remote
 
+import com.servin.ahorrapp.model.RandomRequest
+import com.servin.ahorrapp.model.RandomResponse
+import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface RandomApiService {
-    @GET("integers/")
-    suspend fun getRandomNumber(
-        @Query("num") count: Int = 1,
-        @Query("min") min: Int,
-        @Query("max") max: Int,
-        @Query("col") col: Int = 1,
-        @Query("base") base: Int = 10,
-        @Query("format") format: String = "plain",
-        @Query("rnd") rnd: String = "new"
-    ): String // Retorna un String (el número en texto plano)
+    @POST("json-rpc/4/invoke")
+    suspend fun generateInteger(@Body randomRequest: RandomRequest): Response<RandomResponse>
+
 }

@@ -77,5 +77,17 @@ object AppModule {
             .create()
     }
 
+    @Provides
+    @Singleton
+    fun provideRetrofit(gson: Gson): Retrofit = Retrofit.Builder()
+        .baseUrl("https://api.random.org/")
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build()
+
+    @Provides
+    @Singleton
+    fun provideApiService(retrofit: Retrofit): RandomApiService =
+        retrofit.create(RandomApiService::class.java)
+
 
 }

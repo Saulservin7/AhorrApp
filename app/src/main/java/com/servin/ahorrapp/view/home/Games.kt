@@ -15,7 +15,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -38,6 +40,8 @@ fun Games(navController: NavController, viewModel: RouletteViewModel) {
 @Composable
 fun GamesContent(navController: NavController, viewModel: RouletteViewModel) {
     val rooms = viewModel.roomsList.collectAsState().value
+
+
 
     LazyColumn(
         modifier = Modifier

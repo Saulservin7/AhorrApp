@@ -7,12 +7,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.servin.ahorrapp.view.games.Roulette
+import com.servin.ahorrapp.view.games.roulette.Roulette
 import com.servin.ahorrapp.view.home.HomeView
 import com.servin.ahorrapp.view.onboarding.MainOnBoarding
 import com.servin.ahorrapp.view.profile.Profile
 import com.servin.ahorrapp.view.settings.Settings
-import com.servin.ahorrapp.view.splashscreen.SplashScreen
 import com.servin.ahorrapp.viewmodel.OnBoardingViewModel
 import com.servin.ahorrapp.viewmodel.RouletteViewModel
 

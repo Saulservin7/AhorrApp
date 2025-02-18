@@ -50,7 +50,7 @@ fun HomeView(navController: NavController,viewModel: RouletteViewModel) {
 
         when (selectedTabIndex.value) {
             0 -> Games(navController,viewModel)
-            1 -> NewGame(navController)
+            1 -> NewGame(navController,viewModel)
         }
 
     }

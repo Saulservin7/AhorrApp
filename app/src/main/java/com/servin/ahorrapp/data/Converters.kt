@@ -7,7 +7,6 @@ import com.google.gson.reflect.TypeToken
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory
 
 class Converters {
-    // Configura el adaptador para la clase sellada
     private val gameAdapter = RuntimeTypeAdapterFactory.of(Game::class.java, "type")
         .registerSubtype(Game.Ruleta::class.java, "ruleta")
         .registerSubtype(Game.Trivia::class.java, "trivia")
@@ -24,5 +23,16 @@ class Converters {
     @TypeConverter
     fun toGame(gameString: String): Game {
         return gson.fromJson(gameString, Game::class.java)
+    }
+
+    @TypeConverter
+    fun listToJson(value: List<Int>?): String {
+        return gson.toJson(value)
+    }
+
+    @TypeConverter
+    fun jsonToList(value: String?): List<Int>? {
+        return if (value.isNullOrEmpty()) null
+        else gson.fromJson(value, object : TypeToken<List<Int>>() {}.type)
     }
 }
