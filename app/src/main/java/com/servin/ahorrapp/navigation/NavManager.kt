@@ -17,7 +17,12 @@ import com.servin.ahorrapp.viewmodel.RouletteViewModel
 
 @Composable
 
-fun NavManager(onBoardingViewModel: OnBoardingViewModel, rouletteViewModel: RouletteViewModel) {
+fun NavManager(
+    onBoardingViewModel: OnBoardingViewModel,
+    rouletteViewModel: RouletteViewModel,
+    isDarkMode: Boolean,
+    onThemeChange: (Boolean) -> Unit
+) {
 
     val navController = rememberNavController()
     val navigationItem = listOf(
@@ -52,7 +57,7 @@ fun NavManager(onBoardingViewModel: OnBoardingViewModel, rouletteViewModel: Roul
                 when (item) {
                     NavigationItem.Home -> HomeView(navController, rouletteViewModel)
                     NavigationItem.Profile -> Profile(navController)
-                    NavigationItem.Settings -> Settings(navController)
+                    NavigationItem.Settings -> Settings(navController,isDarkMode,onThemeChange)
                     NavigationItem.Ruleta -> Roulette(navController, rouletteViewModel)
                     NavigationItem.OnBoarding -> MainOnBoarding(onBoardingViewModel, navController)
                 }

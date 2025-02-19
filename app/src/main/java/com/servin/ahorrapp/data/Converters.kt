@@ -25,14 +25,4 @@ class Converters {
         return gson.fromJson(gameString, Game::class.java)
     }
 
-    @TypeConverter
-    fun listToJson(value: List<Int>?): String {
-        return gson.toJson(value)
-    }
-
-    @TypeConverter
-    fun jsonToList(value: String?): List<Int>? {
-        return if (value.isNullOrEmpty()) null
-        else gson.fromJson(value, object : TypeToken<List<Int>>() {}.type)
-    }
 }

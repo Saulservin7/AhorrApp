@@ -101,7 +101,7 @@ fun NewGameDialog(
                     val initValue = rouletteViewModel.initvalue.value.toInt()
                     val finalValue = rouletteViewModel.finalvalue.value.toInt()
                     val ruletaGame =
-                        Game.Ruleta(rangeStart = initValue, rangeEnd = finalValue)
+                        Game.Ruleta(rangeStart = initValue, rangeEnd = finalValue, type = "ruleta", usedNumbers = "")
                     rouletteViewModel.addRoom(
                         Rooms(
                             game = ruletaGame,

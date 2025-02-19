@@ -16,7 +16,7 @@ import com.servin.ahorrapp.navigation.NavigationItem
 @Composable
 
 fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(NavigationItem.Home, NavigationItem.Profile, NavigationItem.Settings)
+    val items = listOf(NavigationItem.Home, NavigationItem.Settings)
 
 
     NavigationBar {

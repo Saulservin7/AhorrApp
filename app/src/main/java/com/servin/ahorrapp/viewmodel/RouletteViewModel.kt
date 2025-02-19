@@ -6,10 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.gson.Gson
 import com.servin.ahorrapp.data.NetworkResult
-import com.servin.ahorrapp.model.RandomResponse
 import com.servin.ahorrapp.model.Rooms
 import com.servin.ahorrapp.repository.AhorraAppRepository
 import com.servin.ahorrapp.repository.RandomRepository
@@ -22,7 +20,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.math.log
 
 
 @HiltViewModel
@@ -35,8 +32,8 @@ class RouletteViewModel @Inject constructor(
     ViewModel() {
 
 
-    private val _randomNumber = MutableLiveData<NetworkResult<Int>>()
-    val randomNumber: LiveData<NetworkResult<Int>> = _randomNumber
+    private val _randomNumber = mutableStateOf(0)
+    val randomNumber = _randomNumber
 
     private val _initvalue = mutableStateOf("")
     val initvalue = _initvalue
@@ -105,11 +102,6 @@ class RouletteViewModel @Inject constructor(
     }
 
 
-    private suspend fun updateTotalSaving(id: Int, totalSaving: Long) {
-        withContext(Dispatchers.IO) {
-            repository.updateTotalSaving(id, totalSaving)
-        }
-    }
     fun getRoomById(id: Int) = viewModelScope.launch {
         val room = repository.getRoomById(id)
         _room.value = room
@@ -117,29 +109,92 @@ class RouletteViewModel @Inject constructor(
     }
 
 
-    fun fetchRandomNumber(id: Int, totalSaving: Long, apiKey: String, min: Int, max: Int) {
+    /*  fun fetchRandomNumber(
+          id: Int,
+          totalSaving: Long,
+          apiKey: String,
+          min: Int,
+          max: Int,
+          usedNumbers: String
+      ) {
+          viewModelScope.launch {
+
+              _randomNumber.value = NetworkResult.Loading
+              val result = randomRepository.getRandomNumber(apiKey, min, max)
+              _randomNumber.value = result
+
+              val randomNumberValue = (result as? NetworkResult.Success)?.data ?: 0
+              withContext(Dispatchers.IO) {
+                  repository.updateTotalSaving(id, totalSaving + randomNumberValue)
+              }
+
+              withContext(Dispatchers.IO) {
+                  repository.updateRuletaUsedNumbers(
+                      id,
+                      usedNumbers + "," + randomNumberValue.toString() // Sin gson.toJson()
+                  )
+              }
+
+
+              getRoomById(id)
+          }
+      }
+
+     */
+
+    fun fetchRandomNumber(
+        id: Int,
+        min: Int,
+        max: Int,
+        usedNumbers: String,
+        totalSaving: Long
+    ) {
         viewModelScope.launch {
+            val trimmedString = usedNumbers.trim { it == ',' }
+            val numberList = trimmedString.split(",")
+                .filter { it.isNotBlank() }     // Eliminar cadenas vacías
+                .mapNotNull { it.toIntOrNull() }
+            val availableNumber = getNonRepeatedNumber(min, max, numberList)
 
-            _randomNumber.value = NetworkResult.Loading
-            val result = randomRepository.getRandomNumber(apiKey, min, max)
-            _randomNumber.value = result
+            availableNumber?.let { number ->
+                // Actualizar usedNumbers y totalSaving
+                val newUsedNumbers = numberList + number
+                withContext(Dispatchers.IO) {
+                    repository.updateRuletaUsedNumbers(
+                        id,
+                        newUsedNumbers.joinToString(",")
+                    )
+                }
+                withContext(Dispatchers.IO) {
+                    repository.updateTotalSaving(id, totalSaving + number)
+                }
 
-            val randomNumberValue = (result as? NetworkResult.Success)?.data ?: 0
-            withContext(Dispatchers.IO) {
-                repository.updateTotalSaving(id, totalSaving + randomNumberValue)
+            } ?: run {
+                Log.e("RouletteViewModel", "No hay números disponibles")
             }
-
-            /*withContext(Dispatchers.IO) {
-            repository.addNumberToRuleta(id, randomNumberValue)
-            }*/
-
-            // Llama a getRoomById para obtener los datos más recientes de la sala
             getRoomById(id)
         }
     }
 
 
+    // Función para obtener un número no usado
+    fun getNonRepeatedNumber(
+        min: Int,
+        max: Int,
+        usedNumbers: List<Int>
+    ): Int? {
 
+
+        // Paso 1: Generar lista de números disponibles
+        val allNumbers = (min..max).toList()
+        val availableNumbers = allNumbers - usedNumbers
+
+        // Paso 2: Elegir un número aleatorio (si hay disponibles)
+        return availableNumbers.randomOrNull()
+
+    }
+
+    // Uso en el ViewModel
 
 
 }

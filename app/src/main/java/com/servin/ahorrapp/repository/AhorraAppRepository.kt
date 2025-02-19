@@ -60,9 +60,10 @@ class AhorraAppRepository @Inject constructor(private val ahorraAppDatabase: Aho
     suspend fun getRoomById(id: Int): Rooms =
         ahorraAppDatabase.roomsDao().getRoomById(id).flowOn(Dispatchers.IO).first()
 
+    suspend fun updateRuletaUsedNumbers(id: Int, newUsedNumbers: String) =
+        ahorraAppDatabase.roomsDao().updateRuletaUsedNumbers(id, newUsedNumbers)
 
-    /*suspend fun addNumberToRuleta(roomId: Int, newNumber: Int) {
-        ahorraAppDatabase.roomsDao().addNumberToRuleta(roomId, newNumber)
-    }*/
+
+
 
 }

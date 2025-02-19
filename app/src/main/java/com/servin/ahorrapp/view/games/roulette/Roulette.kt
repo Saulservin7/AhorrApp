@@ -177,14 +177,17 @@ fun RouletteContent(rouletteViewModel: RouletteViewModel, roomId: Int?) {
             onClick = {
                 rouletteViewModel.startRotation()
 
-                    rouletteViewModel.fetchRandomNumber(
-                        roomId!!, roomData?.totalSaving ?: 0,
-                        "3c1ff1c0-0eca-475d-9d79-ec948b620a24",
-                        rangeStart ?: 0,
-                        rangeEnd ?: 0
-                    )
+                rouletteViewModel.fetchRandomNumber(
+                    id = roomId ?: 0,
+                    totalSaving = roomData?.totalSaving ?: 0,
+                    min = rangeStart ?: 0,
+                    max = rangeEnd ?: 0,
+                    usedNumbers = (roomData?.game as? Game.Ruleta)?.usedNumbers ?: ""
+
+                )
 
                 Log.d("Roulette", "total: ${roomData?.totalSaving}")
+                Log.d("Roulette", "numbers: ${(roomData?.game as? Game.Ruleta)?.usedNumbers}")
 
 
             },
@@ -192,11 +195,20 @@ fun RouletteContent(rouletteViewModel: RouletteViewModel, roomId: Int?) {
             Text("Girar")
 
         }
+        Text(
+            text = "Ultimos Números : ${
+                (roomData?.game as? Game.Ruleta)?.usedNumbers?.split(",")
+                    ?.reversed()
+                    ?.joinToString(",")?.take(11)
+            }",
+            modifier = Modifier.padding(20.dp)
+        )
         if (showNumberGrid && rangeStart != null && rangeEnd != null) {
             NumberGridDialog(
                 initial = rangeStart,
                 final = rangeEnd,
-                onDismiss = { showNumberGrid = false }
+                onDismiss = { showNumberGrid = false },
+                usedNumbers = (roomData?.game as? Game.Ruleta)?.usedNumbers ?: ""
             )
         }
 

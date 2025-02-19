@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.servin.ahorrapp.viewmodel.RouletteViewModel
@@ -26,10 +27,25 @@ import com.servin.ahorrapp.viewmodel.RouletteViewModel
 fun NumberGridDialog(
     initial: Int,
     final: Int,
+    usedNumbers: String,  // Recibir los números usados
     onDismiss: () -> Unit
 ) {
     val numberRange = remember(initial, final) {
         (initial..final).toList()
+    }
+
+    // Convertir el string a lista de números
+    val usedNumbersList = remember(usedNumbers) {
+        if (usedNumbers.isEmpty()) {
+            emptyList()
+        } else {
+            // Paso 1: Eliminar comas al inicio/final
+            val trimmedNumbers = usedNumbers.trim { it == ',' }
+            // Paso 2: Dividir y filtrar
+            trimmedNumbers.split(",")
+                .filter { it.isNotBlank() }
+                .mapNotNull { it.toIntOrNull() }
+        }
     }
 
     Dialog(onDismissRequest = onDismiss) {
@@ -53,7 +69,10 @@ fun NumberGridDialog(
                     modifier = Modifier.heightIn(max = 500.dp)
                 ) {
                     items(numberRange) { number ->
-                        NumberCell(number = number)
+                        NumberCell(
+                            number = number,
+                            isUsed = usedNumbersList.contains(number)
+                        )
                     }
                 }
             }
@@ -61,15 +80,15 @@ fun NumberGridDialog(
     }
 }
 
-// NumberCell permanece igual
 @Composable
-private fun NumberCell(number: Int) {
+private fun NumberCell(number: Int, isUsed: Boolean) {
     Box(
         modifier = Modifier
             .padding(4.dp)
             .aspectRatio(1f)
             .background(
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color = if (isUsed) MaterialTheme.colorScheme.secondaryContainer
+                else MaterialTheme.colorScheme.primaryContainer,
                 shape = RoundedCornerShape(8.dp)
             ),
         contentAlignment = Alignment.Center
@@ -77,7 +96,10 @@ private fun NumberCell(number: Int) {
         Text(
             text = number.toString(),
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = if (isUsed) MaterialTheme.colorScheme.onSecondaryContainer
+            else MaterialTheme.colorScheme.onPrimaryContainer,
+            textDecoration = if (isUsed) TextDecoration.LineThrough
+            else TextDecoration.None
         )
     }
 }

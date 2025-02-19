@@ -28,6 +28,12 @@ interface RoomsDao {
     @Query("UPDATE rooms SET totalSaving=:totalSaving WHERE id=:id")
     suspend fun updateTotalSaving(id: Int, totalSaving: Long)
 
+    @Query("""
+        UPDATE rooms 
+        SET game = json_replace(game, '$.usedNumbers', :newUsedNumbers) 
+        WHERE id = :id
+    """)
+    suspend fun updateRuletaUsedNumbers(id: Int, newUsedNumbers: String)
 
 
     @Insert
@@ -39,19 +45,5 @@ interface RoomsDao {
     @Delete
     suspend fun deleteRoom(room: Rooms)
 
-
-   /* suspend fun addNumberToRuleta(roomId: Int, newNumber: Int) {
-        val room = getRoomById(roomId).first()
-        when (val game = room.game) {
-            is Game.Ruleta -> {
-                // Si numbersList es null, usa una lista vacía
-                val currentNumbers = game.numbersList ?: emptyList()
-                val updatedNumbers = currentNumbers + newNumber
-                val updatedGame = game.copy(numbersList = updatedNumbers)
-                updateRoom(room.copy(game = updatedGame))
-            }
-            else -> throw Exception("Not a Ruleta game")
-        }
-    } */
 
 }
