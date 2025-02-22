@@ -182,12 +182,12 @@ fun RouletteContent(rouletteViewModel: RouletteViewModel, roomId: Int?) {
                     totalSaving = roomData?.totalSaving ?: 0,
                     min = rangeStart ?: 0,
                     max = rangeEnd ?: 0,
-                    usedNumbers = (roomData?.game as? Game.Ruleta)?.usedNumbers ?: ""
+                    usedNumbers = (roomData?.usedNumbers ?: "")
 
                 )
 
                 Log.d("Roulette", "total: ${roomData?.totalSaving}")
-                Log.d("Roulette", "numbers: ${(roomData?.game as? Game.Ruleta)?.usedNumbers}")
+
 
 
             },
@@ -197,7 +197,7 @@ fun RouletteContent(rouletteViewModel: RouletteViewModel, roomId: Int?) {
         }
         Text(
             text = "Ultimos Números : ${
-                (roomData?.game as? Game.Ruleta)?.usedNumbers?.split(",")
+                roomData?.usedNumbers?.split(",")
                     ?.reversed()
                     ?.joinToString(",")?.take(11)
             }",
@@ -208,7 +208,7 @@ fun RouletteContent(rouletteViewModel: RouletteViewModel, roomId: Int?) {
                 initial = rangeStart,
                 final = rangeEnd,
                 onDismiss = { showNumberGrid = false },
-                usedNumbers = (roomData?.game as? Game.Ruleta)?.usedNumbers ?: ""
+                usedNumbers = (roomData?.usedNumbers ?: "")
             )
         }
 

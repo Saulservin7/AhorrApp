@@ -178,7 +178,7 @@ class RouletteViewModel @Inject constructor(
 
 
     // Función para obtener un número no usado
-    fun getNonRepeatedNumber(
+    private fun getNonRepeatedNumber(
         min: Int,
         max: Int,
         usedNumbers: List<Int>

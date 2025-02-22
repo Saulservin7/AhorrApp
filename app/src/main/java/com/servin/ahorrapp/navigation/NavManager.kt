@@ -20,7 +20,6 @@ import com.servin.ahorrapp.viewmodel.RouletteViewModel
 fun NavManager(
     onBoardingViewModel: OnBoardingViewModel,
     rouletteViewModel: RouletteViewModel,
-    isDarkMode: Boolean,
     onThemeChange: (Boolean) -> Unit
 ) {
 
@@ -57,7 +56,7 @@ fun NavManager(
                 when (item) {
                     NavigationItem.Home -> HomeView(navController, rouletteViewModel)
                     NavigationItem.Profile -> Profile(navController)
-                    NavigationItem.Settings -> Settings(navController,isDarkMode,onThemeChange)
+                    NavigationItem.Settings -> Settings(navController,onThemeChange)
                     NavigationItem.Ruleta -> Roulette(navController, rouletteViewModel)
                     NavigationItem.OnBoarding -> MainOnBoarding(onBoardingViewModel, navController)
                 }

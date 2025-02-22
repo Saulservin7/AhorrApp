@@ -28,11 +28,7 @@ interface RoomsDao {
     @Query("UPDATE rooms SET totalSaving=:totalSaving WHERE id=:id")
     suspend fun updateTotalSaving(id: Int, totalSaving: Long)
 
-    @Query("""
-        UPDATE rooms 
-        SET game = json_replace(game, '$.usedNumbers', :newUsedNumbers) 
-        WHERE id = :id
-    """)
+    @Query("UPDATE rooms SET usedNumbers = :newUsedNumbers WHERE id = :id")
     suspend fun updateRuletaUsedNumbers(id: Int, newUsedNumbers: String)
 
 

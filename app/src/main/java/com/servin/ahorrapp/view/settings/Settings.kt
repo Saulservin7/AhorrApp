@@ -9,10 +9,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.servin.ahorrapp.view.bottombar.BottomNavigationBar
+import com.servin.ahorrapp.viewmodel.ThemeViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Settings(navController: NavController, isDarkMode: Boolean, onThemeChange: (Boolean) -> Unit) {
+fun Settings(navController: NavController, onThemeChange: (Boolean) -> Unit ) {
+
+   val viewModel: ThemeViewModel = hiltViewModel()
+    val isDarkMode by viewModel.darkThemeState.collectAsState()
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) {
@@ -32,7 +38,7 @@ fun Settings(navController: NavController, isDarkMode: Boolean, onThemeChange: (
                 Spacer(modifier = Modifier.width(8.dp))
                 Switch(
                     checked = isDarkMode,
-                    onCheckedChange = { onThemeChange(it) } // Ahora notifica a MainActivity
+                    onCheckedChange = { viewModel.toggleTheme(it)} // Ahora notifica a MainActivity
                 )
             }
         }

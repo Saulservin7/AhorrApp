@@ -1,13 +1,17 @@
 package com.servin.ahorrapp.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory
 import com.servin.ahorrapp.data.Game
 import com.servin.ahorrapp.data.GameTypeAdapter
 import com.servin.ahorrapp.data.remote.RandomApiService
 import com.servin.ahorrapp.datastore.StoreBoarding
+import com.servin.ahorrapp.datastore.dataStore
 import com.servin.ahorrapp.room.AhorraAppDatabase
 import com.servin.ahorrapp.room.GoalsDao
 import com.servin.ahorrapp.room.RoomsDao
@@ -34,9 +38,17 @@ object AppModule {
         return StoreBoarding(context)
     }
 
+
     @Provides
     @Singleton
-    fun providesUsersDao(ahorraAppDatabase: AhorraAppDatabase):UserDao{
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+        return context.dataStore
+    }
+
+
+    @Provides
+    @Singleton
+    fun providesUsersDao(ahorraAppDatabase: AhorraAppDatabase): UserDao {
         return ahorraAppDatabase.userDao()
     }
 
@@ -69,13 +81,19 @@ object AppModule {
         ).fallbackToDestructiveMigration().build()
     }
 
+
     @Provides
     @Singleton
     fun provideGson(): Gson {
         return GsonBuilder()
-            .registerTypeAdapter(Game::class.java, GameTypeAdapter())
+            .registerTypeAdapterFactory(
+                RuntimeTypeAdapterFactory.of(Game::class.java, "type")
+                    .registerSubtype(Game.Ruleta::class.java, "ruleta")
+                    .registerSubtype(Game.Trivia::class.java, "trivia")
+            )
             .create()
     }
+
 
     @Provides
     @Singleton

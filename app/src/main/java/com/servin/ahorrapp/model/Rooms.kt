@@ -22,6 +22,9 @@ data class Rooms(
     val userId:Int=0,
 
     @ColumnInfo
-    val totalSaving:Long=0
+    val totalSaving:Long=0,
+
+    @ColumnInfo
+    val usedNumbers:String?=""
 
 )
